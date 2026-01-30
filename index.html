@@ -1,1 +1,982 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iqtisodiy Sotsiologiya Quizi - OIS</title>
+    <style>
+        /* Oddiy, samarali va tez ishlaydigan CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 10px;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #2c80ff;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #1a1a1a;
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #2c80ff;
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 5px 10px;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #22c55e;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .question-container {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: #2c80ff;
+            color: white;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .option {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+        }
+        
+        .option:hover {
+            border-color: #2c80ff;
+            background: #f0f7ff;
+        }
+        
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .option.wrong {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 180px;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: #2c80ff;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1a6de0;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+        
+        .result-container {
+            background: linear-gradient(135deg, #2c80ff, #0052cc);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 25px;
+            display: none;
+        }
+        
+        .result-title {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        .result-score {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+        
+        .result-message {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .emoji {
+            font-size: 30px;
+            margin: 10px;
+        }
+        
+        .feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 1000;
+            animation: slideIn 0.5s ease, fadeOut 0.5s ease 2s forwards;
+        }
+        
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+        
+        .feedback.wrong {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+        }
+        
+        /* Mobil uchun moslashtirish */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .question-text {
+                font-size: 15px;
+            }
+            
+            .option {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 18px;
+            }
+            
+            .question-container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
 
+<div class="container">
+    <header>
+        <h1>Iqtisodiy Sotsiologiya Quizi</h1>
+        <div class="subtitle">Oddiy Interaktiv Sistema - Test bilimingizni sinang</div>
+    </header>
+    
+    <div class="stats">
+        <div class="stat-box">
+            <span class="stat-value" id="current-question">1</span>
+            <span class="stat-label">Joriy Savol</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-value" id="correct-count">0</span>
+            <span class="stat-label">To'g'ri Javob</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-value" id="total-questions">25</span>
+            <span class="stat-label">Jami Savollar</span>
+        </div>
+    </div>
+    
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+    
+    <div id="quiz-content">
+        <!-- Bu yerda savollar va javoblar dinamik ravishda yuklanadi -->
+    </div>
+    
+    <div class="result-container" id="result-container">
+        <h2 class="result-title">Test Yakunlandi! 🎉</h2>
+        <div class="emoji" id="result-emoji">🏆</div>
+        <div class="result-score"><span id="final-score">0</span>/25</div>
+        <div class="result-message" id="result-message"></div>
+        <p>Testni qayta boshlash uchun quyidagi tugmani bosing</p>
+        <div style="margin-top: 20px;">
+            <button class="btn btn-success" onclick="restartQuiz()">
+                <span>🔄</span> Testni Qayta Boshlash
+            </button>
+        </div>
+    </div>
+    
+    <div class="controls" id="controls">
+        <button class="btn btn-secondary" onclick="previousQuestion()" id="prev-btn">
+            <span>⬅️</span> Oldingi
+        </button>
+        <button class="btn btn-primary" onclick="nextQuestion()" id="next-btn">
+            Keyingi <span>➡️</span>
+        </button>
+        <button class="btn btn-success" onclick="finishQuiz()" id="finish-btn">
+            <span>✅</span> Testni Yakunlash
+        </button>
+    </div>
+</div>
+
+<script>
+// Savollar ma'lumotlari (25 ta asosiy savol)
+const quizData = [
+    {
+        q: "Iqtisodiy faoliyatning ijtimoiy asoslari deganda nima tushuniladi?",
+        a: [
+            "Iqtisodiy jarayonlarning ijtimoiy munosabatlar, qadriyatlar va institutlar bilan bog'liqligi",
+            "Iqtisodiy faoliyatning texnik, nazariy, amaliy jihatlari",
+            "Makroiqtisodiy ko'rsatkichlar tizimi",
+            "Bozor narxlarining shakllanish mexanizmi"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy xatti-harakatlarning ijtimoiy xarakteri nimada namoyon bo'ladi?",
+        a: [
+            "Jamiyat me'yorlari va ijtimoiy ta'sirlar bilan shakllanishida",
+            "Shaxsiy manfaatlarga asoslanishida",
+            "Tabiiy resurslardan foydalanishda",
+            "Texnologik innovatsiyalarni joriy etishda"
+        ],
+        c: 0
+    },
+    {
+        q: "Qaysi omil iqtisodiy faoliyatga ijtimoiy ta'sir ko'rsatadi?",
+        a: [
+            "Madaniy qadriyatlar va an'analar",
+            "Valyuta kursi",
+            "Inflyatsiya darajasi",
+            "Foiz stavkalari"
+        ],
+        c: 0
+    },
+    {
+        q: "Ijtimoiy institutlar iqtisodiy faoliyatga qanday ta'sir ko'rsatadi?",
+        a: [
+            "Iqtisodiy xulq-atvorni tartibga soladi va yo'naltiradi",
+            "Ishlab chiqarish hajmini oshiradi",
+            "Narxlarni bevosita belgilaydi",
+            "Valyuta emissiyasini amalga oshiradi"
+        ],
+        c: 0
+    },
+    {
+        q: "Mehnatning ijtimoiy mazmuni nimada ifodalanadi?",
+        a: [
+            "Jamiyatda maqom, rol va ijtimoiy integratsiyani ta'minlashida",
+            "Daromad olish manbai bo'lishida",
+            "Texnologik jarayon sifatida",
+            "Bozor raqobatini kuchaytirishda"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatda ijtimoiy tengsizlik nimani anglatadi?",
+        a: [
+            "Resurslar va imkoniyatlarning jamiyatda notekis taqsimlanishini",
+            "Ishlab chiqarish texnikasidagi farqlarni",
+            "Bozor talabining pasayishini",
+            "Davlat xarajatlarining oshishini"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy qarorlar qabul qilishda ijtimoiy omil qaysi?",
+        a: [
+            "Ijtimoiy tajriba va guruh ta'siri",
+            "Matematik hisob-kitoblar va tahlil",
+            "Tabiiy sharoitlar",
+            "Texnik reglamentlar"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatda ijtimoiy manfaatlar nimani ifodalaydi?",
+        a: [
+            "Jamiyat va guruhlar ehtiyojlarini qondirishga intilishni",
+            "Shaxsiy foydani maksimal darajaga yetkazishni",
+            "Davlat monopoliyasini",
+            "Bozor segmentatsiyasini"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy tizimlarning ijtimoiy asoslari qaysi jihatda ko'rinadi?",
+        a: [
+            "Ijtimoiy munosabatlar va institutlar orqali",
+            "Mulkka bo'lgan huquq va egalik shakllarida",
+            "Soliq stavkalarida",
+            "Pul muomalasida"
+        ],
+        c: 0
+    },
+    {
+        q: "Ijtimoiy me'yorlar iqtisodiy faoliyatga qanday ta'sir qiladi?",
+        a: [
+            "Xatti-harakatlar chegarasini belgilaydi va muvofiqlashtiradi",
+            "Iqtisodiy faoliyatni cheklab qo'yadi",
+            "Narxlarni pasaytiradi",
+            "Ishlab chiqarishni avtomatlashtiradi"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatda ishonch tushunchasi nimani anglatadi?",
+        a: [
+            "Iqtisodiy aloqalarda barqarorlik va hamkorlikni",
+            "Faqat shartnomaviy majburiyatlarni",
+            "Davlat nazoratini",
+            "Moliyaviy nazoratni"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatning ijtimoiy samaradorligi nimada ifodalanadi?",
+        a: [
+            "Aholi farovonligi va ijtimoiy barqarorlikda",
+            "Foyda miqdorida",
+            "Eksport hajmida",
+            "Valyuta zaxiralarida"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatda ijtimoiy rol nima?",
+        a: [
+            "Shaxsning iqtisodiy jarayondagi kutilayotgan xulq-atvori",
+            "Lavozim nomi",
+            "Texnik vazifa",
+            "Huquqiy hujjat"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatda madaniyatning o'rni nimada?",
+        a: [
+            "Iqtisodiy xulq-atvor va qarorlarni shakllantirishda",
+            "Iste'mol darajasida",
+            "Valyuta ayirboshlashda",
+            "Soliq tizimida"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatning ijtimoiy motivlari qaysilar?",
+        a: [
+            "E'tirof, mavqe va ijtimoiy xavfsizlikka intilish",
+            "Daromad olish",
+            "Texnologiyani yangilash",
+            "Bozor ulushini kengaytirish"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatda ijtimoiy nazorat nimani ta'minlaydi?",
+        a: [
+            "Qoidalar va me'yorlarga rioya etilishini",
+            "Narxlarning erkinligini",
+            "Inflyatsiyani oshishini",
+            "Ishlab chiqarish hajmini"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyat va jamiyat o'rtasidagi bog'liqlik nimada?",
+        a: [
+            "Iqtisodiy jarayonlarning jamiyat tuzilmasiga ta'sirida",
+            "Faqat iqtisodiy o'sishda",
+            "Texnik taraqqiyotda",
+            "Soliq yig'imida"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatda ijtimoiy mas'uliyat nimani anglatadi?",
+        a: [
+            "Jamiyat manfaatlarini hisobga olgan holda faoliyat yuritishni",
+            "Faqat qonunlarga bo'ysunishni",
+            "Daromadni yashirishni",
+            "Raqobatni cheklashni"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatda ijtimoiy kapital nima?",
+        a: [
+            "Ishonch, tarmoqlar va ijtimoiy aloqalar majmui",
+            "Faqat moliyaviy resurslar",
+            "Ishlab chiqarish quvvatlari",
+            "Davlat byudjeti"
+        ],
+        c: 0
+    },
+    {
+        q: "Iqtisodiy faoliyatning ijtimoiy barqarorligi nimaga bog'liq?",
+        a: [
+            "Ijtimoiy adolat va institutlar samaradorligiga",
+            "Faqat iqtisodiy o'sish sur'atlariga",
+            "Valyuta kursiga",
+            "Tashqi savdoga"
+        ],
+        c: 0
+    },
+    {
+        q: "Bozor sotsiologiyasi fanining asosiy tadqiqot obyekti nima?",
+        a: [
+            "Bozor jarayonlarida shakllanadigan ijtimoiy munosabatlar va xulq-atvorni",
+            "Bozor iqtisodiyotining matematik modellarini",
+            "Davlat moliyaviy siyosatini",
+            "Ishlab chiqarish texnologiyalarini"
+        ],
+        c: 0
+    },
+    {
+        q: "Bozor sotsiologiyasi iqtisodiy nazariyadan qaysi jihati bilan farqlanadi?",
+        a: [
+            "Iqtisodiy jarayonlarni ijtimoiy kontekstda tahlil qilishi bilan",
+            "Makroiqtisodiy o'sishga ustuvor e'tibor berishi bilan",
+            "Narx mexanizmlarini rad etishi bilan",
+            "Statistik hisob-kitoblarga tayanishi bilan"
+        ],
+        c: 0
+    },
+    {
+        q: "Bozor munosabatlarida ijtimoiy tarmoqlarning asosiy vazifasi nimadan iborat?",
+        a: [
+            "Axborot almashuvi va ishonchni mustahkamlashdan",
+            "Bozorni markazlashgan boshqaruvga o'tkazishdan",
+            "Raqobatni cheklashdan",
+            "Narxlarni sun'iy belgilashdan"
+        ],
+        c: 0
+    },
+    {
+        q: "Bozor sotsiologiyasida 'ishonch' tushunchasi nimani anglatadi?",
+        a: [
+            "Bozor ishtirokchilari o'rtasida barqaror hamkorlik imkoniyatini",
+            "Shartnomalarning huquqiy kuchini",
+            "Davlat aralashuvini",
+            "Marketing strategiyasini"
+        ],
+        c: 0
+    },
+    {
+        q: "Bozor xatti-harakati tushunchasi nimani ifodalaydi?",
+        a: [
+            "Bozor subyektlarining qaror va harakatlar majmuini",
+            "Ishlab chiqarish texnik jarayonlarini",
+            "Soliq tizimi faoliyatini",
+            "Pul muomalasi mexanizmini"
+        ],
+        c: 0
+    }
+];
+
+// O'zgaruvchilar
+let currentQuestion = 0;
+let userAnswers = new Array(quizData.length).fill(null);
+let score = 0;
+let quizCompleted = false;
+
+// DOM elementlari
+const quizContent = document.getElementById('quiz-content');
+const currentQuestionEl = document.getElementById('current-question');
+const correctCountEl = document.getElementById('correct-count');
+const totalQuestionsEl = document.getElementById('total-questions');
+const progressEl = document.getElementById('progress');
+const resultContainer = document.getElementById('result-container');
+const finalScoreEl = document.getElementById('final-score');
+const resultMessageEl = document.getElementById('result-message');
+const resultEmojiEl = document.getElementById('result-emoji');
+const prevBtn = document.getElementById('prev-btn');
+const nextBtn = document.getElementById('next-btn');
+const finishBtn = document.getElementById('finish-btn');
+
+// Dastlabki sozlash
+function init() {
+    totalQuestionsEl.textContent = quizData.length;
+    updateProgress();
+    showQuestion();
+}
+
+// Progressni yangilash
+function updateProgress() {
+    const progress = ((currentQuestion + 1) / quizData.length) * 100;
+    progressEl.style.width = `${progress}%`;
+    currentQuestionEl.textContent = currentQuestion + 1;
+    
+    // To'g'ri javoblar sonini hisoblash
+    let correct = 0;
+    for (let i = 0; i < userAnswers.length; i++) {
+        if (userAnswers[i] === quizData[i].c) {
+            correct++;
+        }
+    }
+    score = correct;
+    correctCountEl.textContent = score;
+    
+    // Tugmalarni holatini yangilash
+    prevBtn.disabled = currentQuestion === 0;
+    nextBtn.disabled = currentQuestion === quizData.length - 1;
+}
+
+// Savolni ko'rsatish
+function showQuestion() {
+    const question = quizData[currentQuestion];
+    
+    let html = `
+        <div class="question-container">
+            <div class="question-number">${currentQuestion + 1}</div>
+            <div class="question-text">${question.q}</div>
+            <div class="options">
+    `;
+    
+    question.a.forEach((option, index) => {
+        let optionClass = 'option';
+        let isSelected = userAnswers[currentQuestion] === index;
+        let isCorrect = index === question.c;
+        
+        // Agar savol javoblangan bo'lsa, to'g'ri/noto'g'ri ranglarini ko'rsatish
+        if (userAnswers[currentQuestion] !== null) {
+            if (isSelected && isCorrect) {
+                optionClass += ' correct';
+            } else if (isSelected && !isCorrect) {
+                optionClass += ' wrong';
+            } else if (!isSelected && isCorrect) {
+                optionClass += ' correct';
+            }
+        } else if (isSelected) {
+            optionClass += ' selected';
+        }
+        
+        html += `
+            <div class="${optionClass}" onclick="selectOption(${index})">
+                ${String.fromCharCode(65 + index)}. ${option}
+            </div>
+        `;
+    });
+    
+    html += `
+            </div>
+        </div>
+    `;
+    
+    quizContent.innerHTML = html;
+    updateProgress();
+}
+
+// Variantni tanlash
+function selectOption(optionIndex) {
+    if (quizCompleted) return;
+    
+    userAnswers[currentQuestion] = optionIndex;
+    
+    // Ovoz effekti (oddiy)
+    playSound(optionIndex === quizData[currentQuestion].c);
+    
+    // Vizual feedback
+    showFeedback(optionIndex === quizData[currentQuestion].c);
+    
+    showQuestion();
+    
+    // Agar bu oxirgi savol bo'lsa, avtomatik yakunlash tugmasini faollashtirish
+    if (currentQuestion === quizData.length - 1) {
+        finishBtn.style.display = 'block';
+    }
+}
+
+// Ovoz effekti
+function playSound(isCorrect) {
+    try {
+        // Oddiy beep ovozlari
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        oscillator.frequency.value = isCorrect ? 800 : 300;
+        gainNode.gain.value = 0.1;
+        
+        oscillator.start();
+        setTimeout(() => {
+            oscillator.stop();
+        }, 200);
+    } catch (e) {
+        // Audio kontekst qo'llab-quvvatlanmasa, hech narsa qilmaymiz
+    }
+}
+
+// Feedback ko'rsatish
+function showFeedback(isCorrect) {
+    const feedback = document.createElement('div');
+    feedback.className = `feedback ${isCorrect ? 'correct' : 'wrong'}`;
+    feedback.innerHTML = isCorrect ? 
+        '✅ To\'g\'ri javob! Ajoyib!' : 
+        '❌ Noto\'g\'ri javob. To\'g\'ri javobni ko\'ring';
+    
+    document.body.appendChild(feedback);
+    
+    // 3 soniyadan keyin feedbackni olib tashlash
+    setTimeout(() => {
+        feedback.remove();
+    }, 3000);
+}
+
+// Oldingi savolga o'tish
+function previousQuestion() {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        showQuestion();
+    }
+}
+
+// Keyingi savolga o'tish
+function nextQuestion() {
+    if (currentQuestion < quizData.length - 1) {
+        currentQuestion++;
+        showQuestion();
+    }
+}
+
+// Testni yakunlash
+function finishQuiz() {
+    quizCompleted = true;
+    
+    // Javoblangan savollar sonini hisoblash
+    let answered = 0;
+    for (let i = 0; i < userAnswers.length; i++) {
+        if (userAnswers[i] !== null) {
+            answered++;
+        }
+    }
+    
+    // Natijalarni hisoblash
+    score = 0;
+    for (let i = 0; i < quizData.length; i++) {
+        if (userAnswers[i] === quizData[i].c) {
+            score++;
+        }
+    }
+    
+    // Natijalarni ko'rsatish
+    finalScoreEl.textContent = score;
+    
+    // Baholash
+    const percentage = (score / quizData.length) * 100;
+    let message = '';
+    let emoji = '';
+    
+    if (percentage >= 90) {
+        message = 'A\'lo natija! Siz iqtisodiy sotsiologiyani mukammal bilasiz!';
+        emoji = '🏆🎉';
+    } else if (percentage >= 70) {
+        message = 'Yaxshi natija! Yana bir oz o\'rgansangiz zo\'r bo\'lasiz!';
+        emoji = '⭐👍';
+    } else if (percentage >= 50) {
+        message = 'Qoniqarli natija. Yana mashq qilishingiz kerak.';
+        emoji = '📚💪';
+    } else {
+        message = 'Sizga yana o\'qish kerak. Iqtisodiy sotsiologiyani chuqurroq o\'rganing.';
+        emoji = '🎯📖';
+    }
+    
+    resultMessageEl.textContent = message;
+    resultEmojiEl.textContent = emoji;
+    
+    // Kontentlarni yashirish/ko'rsatish
+    quizContent.style.display = 'none';
+    document.querySelector('.stats').style.display = 'none';
+    document.querySelector('.progress-bar').style.display = 'none';
+    document.getElementById('controls').style.display = 'none';
+    resultContainer.style.display = 'block';
+    
+    // Natijalar jadvalini ko'rsatish
+    showResultsTable();
+}
+
+// Natijalar jadvalini ko'rsatish
+function showResultsTable() {
+    let tableHTML = `
+        <div style="margin-top: 20px; text-align: left;">
+            <h3 style="color: white; margin-bottom: 10px;">Savol bo'yicha natijalar:</h3>
+            <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 5px;">
+    `;
+    
+    for (let i = 0; i < quizData.length; i++) {
+        const isCorrect = userAnswers[i] === quizData[i].c;
+        const answerText = userAnswers[i] !== null ? 
+            quizData[i].a[userAnswers[i]] : 
+            'Javob berilmagan';
+        
+        tableHTML += `
+            <div style="margin: 5px 0; padding: 5px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                <strong>${i + 1}. ${quizData[i].q}</strong><br>
+                <span style="color: ${isCorrect ? '#90ee90' : '#ff6b6b'}">
+                    ${isCorrect ? '✅' : '❌'} Sizning javobingiz: ${answerText}
+                </span><br>
+                ${!isCorrect ? `<span style="color: #a0e7a0">To'g'ri javob: ${quizData[i].a[quizData[i].c]}</span>` : ''}
+            </div>
+        `;
+    }
+    
+    tableHTML += `
+            </div>
+        </div>
+    `;
+    
+    resultContainer.innerHTML += tableHTML;
+}
+
+// Testni qayta boshlash
+function restartQuiz() {
+    currentQuestion = 0;
+    userAnswers = new Array(quizData.length).fill(null);
+    score = 0;
+    quizCompleted = false;
+    
+    // Kontentlarni qayta ko'rsatish
+    quizContent.style.display = 'block';
+    document.querySelector('.stats').style.display = 'flex';
+    document.querySelector('.progress-bar').style.display = 'block';
+    document.getElementById('controls').style.display = 'flex';
+    resultContainer.style.display = 'none';
+    
+    // Tugmani yashirish
+    finishBtn.style.display = 'none';
+    
+    // Yangilash
+    updateProgress();
+    showQuestion();
+    
+    // Yuqoriga scroll qilish
+    window.scrollTo(0, 0);
+}
+
+// Klaviatura boshqaruvi
+document.addEventListener('keydown', function(event) {
+    if (quizCompleted) return;
+    
+    switch(event.key) {
+        case 'ArrowLeft':
+            previousQuestion();
+            break;
+        case 'ArrowRight':
+            nextQuestion();
+            break;
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+            const optionIndex = parseInt(event.key) - 1;
+            if (optionIndex >= 0 && optionIndex < 4) {
+                selectOption(optionIndex);
+            }
+            break;
+        case 'Enter':
+            if (currentQuestion === quizData.length - 1) {
+                finishQuiz();
+            } else {
+                nextQuestion();
+            }
+            break;
+    }
+});
+
+// Dasturni ishga tushirish
+window.onload = init;
+</script>
+
+<!-- Oddiy Google Analytics (ixtiyoriy) -->
+<script>
+// Sayt statistikasi uchun oddiy kod
+(function() {
+    // Faqat asosiy funksiyalar
+    console.log('Iqtisodiy Sotsiologiya Quizi yuklandi');
+    
+    // Brauzer xotirasiga natijalarni saqlash (ixtiyoriy)
+    if (typeof(Storage) !== "undefined") {
+        // Test yakunlanganda natijalarni saqlash
+        window.addEventListener('beforeunload', function() {
+            if (score > 0) {
+                localStorage.setItem('lastQuizScore', score);
+                localStorage.setItem('lastQuizTime', new Date().toISOString());
+            }
+        });
+        
+        // Oxirgi natijani ko'rsatish (agar mavjud bo'lsa)
+        const lastScore = localStorage.getItem('lastQuizScore');
+        if (lastScore) {
+            console.log(`Oxirgi test natijangiz: ${lastScore}/${quizData.length}`);
+        }
+    }
+})();
+</script>
+
+</body>
+</html>
